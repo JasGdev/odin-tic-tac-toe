@@ -6,12 +6,10 @@ let gameBoard = (function() {
     };
     let board = ['', '', '', '', '', '', '', '', '']
     let play = (value, symbol) => {board[indexMap[value]] = symbol};
-
     let get = (value) => board[indexMap[value]];
     let displayBoard = () => Array.from(board);
 
-    return {play, get, displayBoard
-    };
+    return {play, get, displayBoard}
 })();
 
 
@@ -21,7 +19,7 @@ const player1 = (function () {
         return gameBoard.displayBoard();
     };
     
-    return { play };
+    return { play }
 })();
 
 const player2 = (function () {
@@ -30,16 +28,28 @@ const player2 = (function () {
         return gameBoard.displayBoard();
     };
 
-    return { play };
+    return { play }
 })();
 
 
-// let gameState = (function(){
-//     // check Win condition
-//     // check Tie condition
-//     // check valid move
+let gameState = (function(){
+    // check Win condition
+    // check Tie condition
+    // check valid move
 
-//     let player1PlayMove = (move) => {
-//         if (gameBoard.displayBoard)
-//     };
-// })
+    let p1Play = (value) => {
+        if (gameBoard.get(value) === ''){
+            return player1.play(value);
+        } else {
+            console.log('Not valid move');
+        }
+    };
+    let p2Play = (value) => {
+        if (gameBoard.get(value) === '') {
+            return player2.play(value);
+        } else {
+            console.log('Not valid move');
+        }
+    };
+    return {p1Play, p2Play}
+})();
