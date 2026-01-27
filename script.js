@@ -7,16 +7,18 @@ let gameBoard = (function() {
     let board = ['', '', '', '', '', '', '', '', '']
     let play = (value, symbol) => {board[indexMap[value]] = symbol};
     let get = (value) => board[indexMap[value]];
-    let displayBoard = () => Array.from(board);
+    let getBoardArray = () => Array.from(board);
 
-    return {play, get, displayBoard}
+    return {play, get, getBoardArray}
 })();
 
 
 const player1 = (function () {
     const play = (value) => {
         gameBoard.play(value, 'X');
-        return gameBoard.displayBoard();
+        gameState.checkEnd();
+
+        return gameBoard.getBoardArray();
     };
     
     return { play }
@@ -25,7 +27,8 @@ const player1 = (function () {
 const player2 = (function () {
     const play = (value) => {
         gameBoard.play(value, 'O');
-        return gameBoard.displayBoard();
+        gameState.checkEnd();
+        return gameBoard.getBoardArray();
     };
 
     return { play }
@@ -35,10 +38,65 @@ const player2 = (function () {
 let gameState = (function(){
     // check Win condition
     // check Tie condition
-    // check valid move
+    let checkEnd = () => {
+        currentBoard = gameBoard.getBoardArray();
+        // Tie
+        if (!currentBoard.includes('')){
+            console.log('Game is tied')
+        } 
+        // check win by row
+        else if (checkRowWin('X')) {
+            console.log('Player 1 wins')
+        } 
+        else if (checkRowWin('O')) {
+            console.log('Player 2 wins')
+        } 
+        // check win by col
+        else if (checkColWin('X')) {
+            console.log('Player 1 wins')
+        }
+        else if (checkColWin('O')) {
+            console.log('Player 2 wins')
+        } 
+        // check win by diag
+        else if (checkDiagWin('X')) {
+            console.log('Player 1 wins')
+        }
+        else if (checkDiagWin('O')) {
+            console.log('Player 2 wins')
+        } 
+    };
 
+    // check row wins
+    let checkRowWin = (symbol) => {
+        return (
+            (currentBoard[0] === symbol && currentBoard[1] === symbol && currentBoard[2] === symbol) ||
+            (currentBoard[3] === symbol && currentBoard[4] === symbol && currentBoard[5] === symbol) ||
+            (currentBoard[6] === symbol && currentBoard[7] === symbol && currentBoard[8] === symbol)
+        );
+    };
+
+    // check col wins
+    let checkColWin = (symbol) => {
+        return (
+            (currentBoard[0] === symbol && currentBoard[3] === symbol && currentBoard[6] === symbol) ||
+            (currentBoard[1] === symbol && currentBoard[4] === symbol && currentBoard[7] === symbol) ||
+            (currentBoard[2] === symbol && currentBoard[5] === symbol && currentBoard[8] === symbol)
+        );
+    };
+
+    // check diagonal wins
+    let checkDiagWin = (symbol) => {
+        return (
+            (currentBoard[0] === symbol && currentBoard[4] === symbol && currentBoard[8] === symbol) ||
+            (currentBoard[2] === symbol && currentBoard[4] === symbol && currentBoard[6] === symbol)
+        );
+    };
+
+    // check valid move
     let p1Play = (value) => {
         if (gameBoard.get(value) === ''){
+            
             return player1.play(value);
         } else {
             console.log('Not valid move');
@@ -46,10 +104,11 @@ let gameState = (function(){
     };
     let p2Play = (value) => {
         if (gameBoard.get(value) === '') {
+            checkEnd();
             return player2.play(value);
         } else {
             console.log('Not valid move');
         }
     };
-    return {p1Play, p2Play}
+    return {p1Play, p2Play, checkEnd}
 })();
