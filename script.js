@@ -201,7 +201,7 @@ let gameInput = (function (){
         displayToAdd = displayRef[value];
 
         displayToAdd.addEventListener('click', function () {
-            
+            gameState.play(value)
         })
         
 
