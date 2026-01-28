@@ -165,17 +165,25 @@ let gameState = (function(){
 
     let resetGame = () => {
             gameBoard.reset();
-            player1Name = 'Player 1';
-            player2Name = 'Player 2';
             gamePlayable = true;
             turn = 1;
+            player1Name = 'Player 1';
+            player2Name = 'Player 2'; 
             gameDisplay.displayRender();
             gameDisplay.updateCurrentStatus();
-            console.log(gameBoard.getBoardArray());
+            
     }
 
+    let setPlayerNames = (p1, p2) => {
+        player1Name = p1;
+        player2Name = p2;
+    }
+
+    let getPlayer1Name = () => player1Name;
+    let getPlayer2Name = () => player2Name;
+
     let getTurn = () => turn;
-    return {p1Play, p2Play, checkEnd, play, player1Name, player2Name, resetGame, getTurn}
+    return { p1Play, p2Play, checkEnd, play, getPlayer1Name, getPlayer2Name, resetGame, getTurn, setPlayerNames}
 })();
 
 // handles display/DOM logic
@@ -208,9 +216,9 @@ let gameDisplay = (function(){
 
     let updateCurrentStatus = () => {
         if (gameState.getTurn() == 2){
-            currentStatusDisplay.textContent = `${gameState.player2Name}'s Turn`;
+            currentStatusDisplay.textContent = `${gameState.getPlayer2Name()}'s Turn`;
         } else if (gameState.getTurn() == 1) {
-            currentStatusDisplay.textContent = `${gameState.player1Name}'s Turn`;
+            currentStatusDisplay.textContent = `${gameState.getPlayer1Name()}'s Turn`;
         }
     }
 
@@ -220,9 +228,9 @@ let gameDisplay = (function(){
         if (gameEndCondition === 't'){
             currentStatusDisplay.textContent = 'Game tied'
         } else if (gameEndCondition === '1') {
-            currentStatusDisplay.textContent = `${gameState.player1Name} wins`;
+            currentStatusDisplay.textContent = `${gameState.getPlayer1Name()} wins`;
         } else if (gameEndCondition === '2'){
-            currentStatusDisplay.textContent = `${gameState.player2Name} wins`;
+            currentStatusDisplay.textContent = `${gameState.getPlayer2Name()} wins`;
         }
         
     }
@@ -259,9 +267,13 @@ let gameInput = (function (){
     const submitButton = document.querySelector("form .submit")
 
     nameForm.addEventListener("submit", function (e) {
-        gameState.player1Name = form.p1Name.value;
-        gameState.player2Name = form.p2Name.value;
-        form.reset();
+        e.preventDefault();
+        gameState.setPlayerNames(nameForm.p1Name.value, nameForm.p2Name.value);
+
+        console.log(nameForm.p1Name.value)
+        console.log(gameState.getPlayer1Name())
+        gameDisplay.updateCurrentStatus();
+        nameForm.reset();
     })
 
 
