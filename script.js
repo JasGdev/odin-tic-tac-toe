@@ -112,7 +112,7 @@ let gameState = (function(){
         if (gameBoard.get(value) === '' && turn === 1){
             turn = 2;
             checkEnd();
-            console.log(`Player ${turn} turn`);
+            gameDisplay.updateCurrentPlayer();
             return player1.play(value);
         } else if (turn === 2) {
             console.log("Currently Player 2's turn")
@@ -124,7 +124,7 @@ let gameState = (function(){
         if (gameBoard.get(value) === '' && turn === 2) {
             turn = 1;
             checkEnd();
-            console.log(`Player ${turn} turn`);
+            gameDisplay.updateCurrentPlayer();
             return player2.play(value);
         } 
         else if (turn === 1){
@@ -133,7 +133,17 @@ let gameState = (function(){
             console.log('Not valid move');
         }
     };
-    return {p1Play, p2Play, checkEnd}
+
+    let play = (value) => {
+        if (turn === 1){
+            p1Play(value);
+        } else {
+            p2Play(value);
+        }
+
+    };
+
+    return {p1Play, p2Play, checkEnd, play}
 })();
 
 // handles display/DOM logic
@@ -150,6 +160,7 @@ let gameDisplay = (function(){
 
     // render the contents of the gameboard array to the webpage 
     let displayRender = () => {
+        // Update gameboard
         const currentBoardState = gameBoard.getBoardArray();
         for (let i = 0; i < 9; i++){
             const cellValue = currentBoardState[i];
@@ -160,12 +171,41 @@ let gameDisplay = (function(){
                 // add to display
                 displayRef[indexReverseMap[i]].innerHTML = '';
                 displayRef[indexReverseMap[i]].appendChild(cellUpdate);
-                
-
             }
         }
     };
 
-    return { displayRender }
+    let updateCurrentPlayer = () => {
+        const currentPlayerDisplay = document.querySelector('.currentPlayer')
+        if (currentPlayerDisplay.textContent.includes('1')){
+            currentPlayerDisplay.textContent = "Player 2's Turn";
+        } else {
+            currentPlayerDisplay.textContent = "Player 1's Turn"
+        }
+    }
+    let getDisplayRef = () => displayRef;
+
+
+    return { displayRender, updateCurrentPlayer, getDisplayRef}
+
+})();
+
+let gameInput = (function (){
+    const indexMap = gameBoard.getIndexMap();
+    const displayRef = gameDisplay.getDisplayRef();
+
+    for (const value in indexMap){
+        console.log(`value is ${value}`)
+        console.log(displayRef[value]);
+        
+        displayToAdd = displayRef[value];
+
+        displayToAdd.addEventListener('click', function () {
+            
+        })
+        
+
+    }
+
 
 })();
