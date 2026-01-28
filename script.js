@@ -4,18 +4,30 @@ let gameBoard = (function() {
         21: 3, 22: 4, 23: 5,
         31: 6, 32: 7, 33: 8
     };
+
+    const indexReverseMap = {};
+
+    for (const key in indexMap) {
+        indexReverseMap[indexMap[key]] = key;
+    }
+
+
     let board = ['', '', '', '', '', '', '', '', '']
     let play = (value, symbol) => {board[indexMap[value]] = symbol};
     let get = (value) => board[indexMap[value]];
     let getBoardArray = () => Array.from(board);
+    let getIndexMap = () => indexMap;
+    let getIndexReverseMap = () => indexReverseMap;
 
-    return {play, get, getBoardArray}
+
+    return {play, get, getBoardArray, getIndexMap, getIndexReverseMap}
 })();
 
 
 const player1 = (function () {
     const play = (value) => {
         gameBoard.play(value, 'X');
+        gameDisplay.displayRender();    
         gameState.checkEnd();
 
         return gameBoard.getBoardArray();
@@ -27,6 +39,7 @@ const player1 = (function () {
 const player2 = (function () {
     const play = (value) => {
         gameBoard.play(value, 'O');
+        gameDisplay.displayRender();
         gameState.checkEnd();
         return gameBoard.getBoardArray();
     };
@@ -111,4 +124,38 @@ let gameState = (function(){
         }
     };
     return {p1Play, p2Play, checkEnd}
+})();
+
+// handles display/DOM logic
+let gameDisplay = (function(){
+    let indexMap = gameBoard.getIndexMap();
+    let indexReverseMap = gameBoard.getIndexReverseMap();
+
+    // setup reference to display
+    const displayRef = {};
+    for (const key in indexMap){
+        displayRef[key] = document.querySelector(`.d${key}`);
+    }
+
+
+    // render the contents of the gameboard array to the webpage 
+    let displayRender = () => {
+        const currentBoardState = gameBoard.getBoardArray();
+        for (let i = 0; i < 9; i++){
+            const cellValue = currentBoardState[i];
+            if (cellValue !== ''){
+                const cellUpdate = document.createElement('div');
+                cellUpdate.classList.add('cell-info');
+                cellUpdate.textContent = cellValue;
+                // add to display
+                displayRef[indexReverseMap[i]].innerHTML = '';
+                displayRef[indexReverseMap[i]].appendChild(cellUpdate);
+                
+
+            }
+        }
+    };
+
+    return { displayRender }
+
 })();
