@@ -49,6 +49,7 @@ const player2 = (function () {
 
 
 let gameState = (function(){
+    let turn = 1;
     // check Win condition
     // check Tie condition
     let checkEnd = () => {
@@ -108,17 +109,26 @@ let gameState = (function(){
 
     // check valid move
     let p1Play = (value) => {
-        if (gameBoard.get(value) === ''){
-            
+        if (gameBoard.get(value) === '' && turn === 1){
+            turn = 2;
+            checkEnd();
+            console.log(`Player ${turn} turn`);
             return player1.play(value);
+        } else if (turn === 2) {
+            console.log("Currently Player 2's turn")
         } else {
             console.log('Not valid move');
         }
     };
     let p2Play = (value) => {
-        if (gameBoard.get(value) === '') {
+        if (gameBoard.get(value) === '' && turn === 2) {
+            turn = 1;
             checkEnd();
+            console.log(`Player ${turn} turn`);
             return player2.play(value);
+        } 
+        else if (turn === 1){
+            console.log("Currently Player 1's turn")
         } else {
             console.log('Not valid move');
         }
