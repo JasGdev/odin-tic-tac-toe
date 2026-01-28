@@ -51,6 +51,7 @@ const player2 = (function () {
 let gameState = (function(){
     let player1Name = 'Player 1';
     let player2Name = 'Player 2';
+    let gamePlayable = true;
 
     let turn = 1;
     // check Win condition
@@ -60,33 +61,40 @@ let gameState = (function(){
         // Tie
         if (!currentBoard.includes('')){
             gameDisplay.gameEndTieDisplay('t');
+            gamePlayable = false;
             console.log('Game is tied')
         } 
         // check win by row
         else if (checkRowWin('X')) {
             gameDisplay.gameEndTieDisplay('1');
+            gamePlayable = false;
             console.log('Player 1 wins')
         } 
         else if (checkRowWin('O')) {
             gameDisplay.gameEndTieDisplay('2');
+            gamePlayable = false;
             console.log('Player 2 wins')
         } 
         // check win by col
         else if (checkColWin('X')) {
             gameDisplay.gameEndTieDisplay('1');
+            gamePlayable = false;
             console.log('Player 1 wins')
         }
         else if (checkColWin('O')) {
             gameDisplay.gameEndTieDisplay('2');
+            gamePlayable = false;
             console.log('Player 2 wins')
         } 
         // check win by diag
         else if (checkDiagWin('X')) {
             gameDisplay.gameEndTieDisplay('1');
+            gamePlayable = false;
             console.log('Player 1 wins')
         }
         else if (checkDiagWin('O')) {
             gameDisplay.gameEndTieDisplay('2');
+            gamePlayable = false;
             console.log('Player 2 wins')
         } 
     };
@@ -145,12 +153,13 @@ let gameState = (function(){
     };
 
     let play = (value) => {
-        if (turn === 1){
-            p1Play(value);
-        } else {
-            p2Play(value);
+        if (gamePlayable){
+            if (turn === 1) {
+                p1Play(value);
+            } else {
+                p2Play(value);
+            }
         }
-
     };
 
     return {p1Play, p2Play, checkEnd, play, player1Name, player2Name}
@@ -198,7 +207,7 @@ let gameDisplay = (function(){
 
     let gameEndTieDisplay = (gameEndCondition) => {
         if (gameEndCondition === 't'){
-            
+
         }
         
     }
