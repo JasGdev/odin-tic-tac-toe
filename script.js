@@ -207,7 +207,11 @@ let gameDisplay = (function(){
 
     let gameEndTieDisplay = (gameEndCondition) => {
         if (gameEndCondition === 't'){
-
+            currentStatusDisplay.textContent = 'Game tied'
+        } else if (gameEndCondition === '1') {
+            currentStatusDisplay.textContent = `${gameState.player1Name} wins`;
+        } else if (gameEndCondition === '2'){
+            currentStatusDisplay.textContent = `${gameState.player2Name} wins`;
         }
         
     }
