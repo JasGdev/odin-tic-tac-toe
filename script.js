@@ -130,7 +130,6 @@ let gameState = (function(){
     let p1Play = (value) => {
         if (gameBoard.get(value) === '' && turn === 1){
             turn = 2;
-            checkEnd();
             gameDisplay.updateCurrentStatus();
             return player1.play(value);
         } else if (turn === 2) {
@@ -142,7 +141,6 @@ let gameState = (function(){
     let p2Play = (value) => {
         if (gameBoard.get(value) === '' && turn === 2) {
             turn = 1;
-            checkEnd();
             gameDisplay.updateCurrentStatus();
             return player2.play(value);
         } 
