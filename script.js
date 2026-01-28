@@ -12,15 +12,16 @@ let gameBoard = (function() {
     }
 
 
-    let board = ['', '', '', '', '', '', '', '', '']
+    let board = ['', '', '', '', '', '', '', '', ''];
     let play = (value, symbol) => {board[indexMap[value]] = symbol};
     let get = (value) => board[indexMap[value]];
     let getBoardArray = () => Array.from(board);
     let getIndexMap = () => indexMap;
     let getIndexReverseMap = () => indexReverseMap;
+    let reset = () => { board = ['', '', '', '', '', '', '', '', '']; };
 
 
-    return {play, get, getBoardArray, getIndexMap, getIndexReverseMap}
+    return {play, get, getBoardArray, getIndexMap, getIndexReverseMap, reset}
 })();
 
 
@@ -162,7 +163,18 @@ let gameState = (function(){
         }
     };
 
-    return {p1Play, p2Play, checkEnd, play, player1Name, player2Name}
+    let resetGame = () => {
+            gameBoard.reset();
+            player1Name = 'Player 1';
+            player2Name = 'Player 2';
+            gamePlayable = true;
+            turn = 1;
+            gameDisplay.displayRender();
+            gameDisplay.updateCurrentStatus();
+            console.log(gameBoard.getBoardArray());
+    }
+
+    return {p1Play, p2Play, checkEnd, play, player1Name, player2Name, resetGame}
 })();
 
 // handles display/DOM logic
@@ -184,14 +196,12 @@ let gameDisplay = (function(){
         const currentBoardState = gameBoard.getBoardArray();
         for (let i = 0; i < 9; i++){
             const cellValue = currentBoardState[i];
-            if (cellValue !== ''){
-                const cellUpdate = document.createElement('div');
-                cellUpdate.classList.add('cell-info');
-                cellUpdate.textContent = cellValue;
-                // add to display
-                displayRef[indexReverseMap[i]].innerHTML = '';
-                displayRef[indexReverseMap[i]].appendChild(cellUpdate);
-            }
+            const cellUpdate = document.createElement('div');
+            cellUpdate.classList.add('cell-info');
+            cellUpdate.textContent = cellValue;
+            // add to display
+            displayRef[indexReverseMap[i]].innerHTML = '';
+            displayRef[indexReverseMap[i]].appendChild(cellUpdate);
         }
     };
 
@@ -215,7 +225,6 @@ let gameDisplay = (function(){
         }
         
     }
-
     
 
     return { displayRender, updateCurrentStatus, getDisplayRef, gameEndTieDisplay}
@@ -235,9 +244,13 @@ let gameInput = (function (){
         displayToAdd.addEventListener('click', function () {
             gameState.play(value)
         })
-        
-
     }
+
+    const resetBtn = document.querySelector('.restartBtn');
+
+    resetBtn.addEventListener('click', function () {
+        gameState.resetGame()});
+
 
 
 })();
