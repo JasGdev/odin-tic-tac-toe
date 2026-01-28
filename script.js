@@ -174,7 +174,8 @@ let gameState = (function(){
             console.log(gameBoard.getBoardArray());
     }
 
-    return {p1Play, p2Play, checkEnd, play, player1Name, player2Name, resetGame}
+    let getTurn = () => turn;
+    return {p1Play, p2Play, checkEnd, play, player1Name, player2Name, resetGame, getTurn}
 })();
 
 // handles display/DOM logic
@@ -206,9 +207,9 @@ let gameDisplay = (function(){
     };
 
     let updateCurrentStatus = () => {
-        if (currentStatusDisplay.textContent.includes('1')){
+        if (gameState.getTurn() == 2){
             currentStatusDisplay.textContent = `${gameState.player2Name}'s Turn`;
-        } else {
+        } else if (gameState.getTurn() == 1) {
             currentStatusDisplay.textContent = `${gameState.player1Name}'s Turn`;
         }
     }
@@ -232,6 +233,8 @@ let gameDisplay = (function(){
 })();
 
 let gameInput = (function (){
+
+    // touch control
     const indexMap = gameBoard.getIndexMap();
     const displayRef = gameDisplay.getDisplayRef();
 
@@ -246,10 +249,20 @@ let gameInput = (function (){
         })
     }
 
+    // Reset button
     const resetBtn = document.querySelector('.restartBtn');
-
     resetBtn.addEventListener('click', function () {
         gameState.resetGame()});
+
+    // name form
+    const nameForm = document.querySelector("#inputNames");
+    const submitButton = document.querySelector("form .submit")
+
+    nameForm.addEventListener("submit", function (e) {
+        gameState.player1Name = form.p1Name.value;
+        gameState.player2Name = form.p2Name.value;
+        form.reset();
+    })
 
 
 
