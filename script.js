@@ -49,6 +49,9 @@ const player2 = (function () {
 
 
 let gameState = (function(){
+    let player1Name = 'Player 1';
+    let player2Name = 'Player 2';
+
     let turn = 1;
     // check Win condition
     // check Tie condition
@@ -56,27 +59,34 @@ let gameState = (function(){
         currentBoard = gameBoard.getBoardArray();
         // Tie
         if (!currentBoard.includes('')){
+            gameDisplay.gameEndTieDisplay('t');
             console.log('Game is tied')
         } 
         // check win by row
         else if (checkRowWin('X')) {
+            gameDisplay.gameEndTieDisplay('1');
             console.log('Player 1 wins')
         } 
         else if (checkRowWin('O')) {
+            gameDisplay.gameEndTieDisplay('2');
             console.log('Player 2 wins')
         } 
         // check win by col
         else if (checkColWin('X')) {
+            gameDisplay.gameEndTieDisplay('1');
             console.log('Player 1 wins')
         }
         else if (checkColWin('O')) {
+            gameDisplay.gameEndTieDisplay('2');
             console.log('Player 2 wins')
         } 
         // check win by diag
         else if (checkDiagWin('X')) {
+            gameDisplay.gameEndTieDisplay('1');
             console.log('Player 1 wins')
         }
         else if (checkDiagWin('O')) {
+            gameDisplay.gameEndTieDisplay('2');
             console.log('Player 2 wins')
         } 
     };
@@ -112,7 +122,7 @@ let gameState = (function(){
         if (gameBoard.get(value) === '' && turn === 1){
             turn = 2;
             checkEnd();
-            gameDisplay.updateCurrentPlayer();
+            gameDisplay.updateCurrentStatus();
             return player1.play(value);
         } else if (turn === 2) {
             console.log("Currently Player 2's turn")
@@ -124,7 +134,7 @@ let gameState = (function(){
         if (gameBoard.get(value) === '' && turn === 2) {
             turn = 1;
             checkEnd();
-            gameDisplay.updateCurrentPlayer();
+            gameDisplay.updateCurrentStatus();
             return player2.play(value);
         } 
         else if (turn === 1){
@@ -143,13 +153,14 @@ let gameState = (function(){
 
     };
 
-    return {p1Play, p2Play, checkEnd, play}
+    return {p1Play, p2Play, checkEnd, play, player1Name, player2Name}
 })();
 
 // handles display/DOM logic
 let gameDisplay = (function(){
     let indexMap = gameBoard.getIndexMap();
     let indexReverseMap = gameBoard.getIndexReverseMap();
+    const currentStatusDisplay = document.querySelector('.currentStatus')
 
     // setup reference to display
     const displayRef = {};
@@ -175,18 +186,26 @@ let gameDisplay = (function(){
         }
     };
 
-    let updateCurrentPlayer = () => {
-        const currentPlayerDisplay = document.querySelector('.currentPlayer')
-        if (currentPlayerDisplay.textContent.includes('1')){
-            currentPlayerDisplay.textContent = "Player 2's Turn";
+    let updateCurrentStatus = () => {
+        if (currentStatusDisplay.textContent.includes('1')){
+            currentStatusDisplay.textContent = `${gameState.player2Name}'s Turn`;
         } else {
-            currentPlayerDisplay.textContent = "Player 1's Turn"
+            currentStatusDisplay.textContent = `${gameState.player1Name}'s Turn`;
         }
     }
+
     let getDisplayRef = () => displayRef;
 
+    let gameEndTieDisplay = (gameEndCondition) => {
+        if (gameEndCondition === 't'){
+            
+        }
+        
+    }
 
-    return { displayRender, updateCurrentPlayer, getDisplayRef}
+    
+
+    return { displayRender, updateCurrentStatus, getDisplayRef, gameEndTieDisplay}
 
 })();
 
